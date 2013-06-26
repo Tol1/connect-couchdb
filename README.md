@@ -6,8 +6,8 @@
 ## Requirements
 
 - couchdb 1.2.x
-- yacw 0.1.x : the couchdb wrapper. Should be easy to use another one.
-- expresso (only for tests)
+- cradle 0.6.x : the couchdb wrapper. Should be easy to use another one.
+- mocha (only for tests)
 
 ## Installation
 

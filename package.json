@@ -1,30 +1,41 @@
 {
   "name": "connect-couchdb",
   "description": "CouchDB session store for Connect",
-  "keywords" : [ "connect", "session", "couchdb", "middleware" ],
+  "keywords": [
+    "connect",
+    "session",
+    "couchdb",
+    "middleware"
+  ],
   "version": "0.4.1",
-  "node":">=0.8",
+  "node": ">=0.8",
   "author": "Thomas Debarochez <thomas.barochez+npm@gmail.com>",
-  "contributors": ["Ian Ward (https://github.com/ianshward)",
-                   "Young Hahn (https://github.com/yhahn)",
-                   "Ryan Kirkman (https://github.com/ryankirkman)",
-                   "Dan VerWeire (https://github.com/wankdanker)",
-                   "Pau Ramon Revilla (https://github.com/masylum)",
-                   "Konstantin Käfer (https://github.com/kkaefer)",
-                   "Daniel Bell (https://github.com/danbell)",
-                   "Quentin Raynaud (https://github.com/even)"],
+  "contributors": [
+    "Ian Ward (https://github.com/ianshward)",
+    "Young Hahn (https://github.com/yhahn)",
+    "Ryan Kirkman (https://github.com/ryankirkman)",
+    "Dan VerWeire (https://github.com/wankdanker)",
+    "Pau Ramon Revilla (https://github.com/masylum)",
+    "Konstantin Käfer (https://github.com/kkaefer)",
+    "Daniel Bell (https://github.com/danbell)",
+    "Quentin Raynaud (https://github.com/even)"
+  ],
   "main": "./index.js",
   "dependencies": {
     "connect": "*",
-    "yacw": "0.2.x"
+    "cradle": "~0.6.6"
   },
   "devDependencies": {
     "mocha": "*"
   },
   "scripts": {
-    "test": "node tools/cleanup.tests.js ; mocha"
+    "test": "node tools/cleanup.tests.js && mocha"
   },
-  "engines": { "node": ">= 0.8.0" },
-  "repository" : {"type" : "git",
-                  "url" : "http://github.com/tdebarochez/connect-couchdb.git"}
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/tdebarochez/connect-couchdb.git"
+  }
 }

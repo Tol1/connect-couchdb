@@ -1,6 +1,5 @@
 var assert = require('assert')
   , connect = require('connect')
-  , path = require('path')
   , fs = require('fs')
   , ConnectCouchDB = require('../')(connect)
   , global_opts = {"name": 'connect-couchdb-' + +new Date};
@@ -9,6 +8,8 @@ if (fs.existsSync('./test/credentials.json')) {
   var credentials = require('./credentials.json');
   global_opts.username = credentials.username;
   global_opts.password = credentials.password;
+  global_opts.host = credentials.host;
+  global_opts.port = credentials.port;
 }
 
 function reason (err) {
@@ -63,9 +64,15 @@ describe('db', function () {
     var store = new ConnectCouchDB(opts);
     store.setup(opts, function (err, res) {
       assert.ok(!err, reason(err));
-      store.db.getOpt('_revs_limit', function (err, res) {
+      store.db.connection.rawRequest({
+          method: 'GET',
+          path: '/' + store.db.name + '/_revs_limit',
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      }, function(err, res) {
         assert.ok(!err, reason(err));
-        assert.equal(res, opts.revs_limit);
+        assert.equal(parseInt(res.body, 10), opts.revs_limit);
         // #set()
         store.set('123', c, function(err, ok){
           assert.ok(!err, '#set() got an error');

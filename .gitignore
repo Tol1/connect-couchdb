@@ -2,3 +2,4 @@
 *.iml
 test/credentials.js
 node_modules/
+test/credentials.json
