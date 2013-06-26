@@ -70,9 +70,9 @@ describe('db', function () {
           headers: {
               'Content-Type': 'application/json'
           }
-      }, function(err, res) {
+      }, function(err, res, body) {
         assert.ok(!err, reason(err));
-        assert.equal(parseInt(res.body, 10), opts.revs_limit);
+        assert.equal(parseInt(body, 10), opts.revs_limit);
         // #set()
         store.set('123', c, function(err, ok){
           assert.ok(!err, '#set() got an error');
