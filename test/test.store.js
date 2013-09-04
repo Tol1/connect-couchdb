@@ -192,8 +192,8 @@ describe('db', function () {
                                     );
                                 }
                                 // Now delay a second and the session time-related data should change
-                                var orig = data;
-                                var start = new Date().getTime();
+                                orig = data;
+                                start = new Date().getTime();
                                 setTimeout(function () {
                                     store.set(cookieName, { cookie: {
                                         maxAge: 20000, originalMaxAge: 19997 },
