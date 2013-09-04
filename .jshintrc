@@ -1,0 +1,22 @@
+{
+  "devel": true,
+  "node": true,
+  "esnext": true,
+  "couch": true,
+
+  "bitwise": true,
+  "eqeqeq": true,
+  "forin": true,
+  "immed": true,
+  "latedef": true,
+  "multistr": true,
+  "newcap": true,
+  "noarg": true,
+  "noempty": true,
+  "regexp": true,
+  "undef": true,
+  "strict": true,
+  "trailing": true,
+  "smarttabs": true,
+  "expr": true
+}
