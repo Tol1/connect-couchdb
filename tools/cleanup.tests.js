@@ -1,3 +1,4 @@
+'use strict';
 var Couch = require('cradle'),
     credentials = require('../test/credentials.json');
 
@@ -13,4 +14,4 @@ databases.forEach(function (database_name) {
           password: credentials.password
       }
   }).database(database_name)).destroy(function(err, result) {});
-})
+});
