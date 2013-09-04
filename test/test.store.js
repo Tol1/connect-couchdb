@@ -29,22 +29,23 @@ describe('connect-session.json', function () {
 });
 describe('db', function () {
   it('put only if needed', function (done) {
+    var cookieName = 'putIfNeeded';
     var opts = global_opts;
     opts.name = 'connect-couch-puttest';
     var store = new ConnectCouchDB(opts);
     var cookie = { cookie: { maxAge: 2000 }, name: 'nd' };
     store.setup(opts, function(err, res) {
       assert.ok(!err, reason(err));
-      store.set('987', cookie, function(err, ok) {
+      store.set(cookieName, cookie, function(err, ok) {
         assert.ok(!err, reason(err));
         // Redefine store.db.put to assure that it's not executed any more:
         store.db._put = store.db.put;
         store.db.put = function(doc, fn) {
           throw new Error('This put is not needed!');
         };
-        store.set('987', cookie, function(err, ok) {
+        store.set(cookieName, cookie, function(err, ok) {
           assert.ok(!err, reason(err));
-          store.destroy('987', function() {
+          store.destroy(cookieName, function() {
             store.length(function(err, len){
               assert.equal(0, len, '#set() null');
               store.clearInterval();
@@ -57,6 +58,7 @@ describe('db', function () {
   });
   // Test basic set/get/clear/length functionality.
   it('set/get/clear/length', function (done) {
+
     var opts = global_opts;
     var c = { cookie: { maxAge: 2000 }, name: 'tj' };
     opts.name = 'connect-couch-test';
@@ -127,10 +129,10 @@ describe('db', function () {
               assert.ok(!err, 'error with #' + i + ' : ' + reason(err));
             };
           };
-          store.set('1', { cookie: { maxAge:  250 } }, cb(1));
-          store.set('2', { cookie: { maxAge:  250 } }, cb(2));
-          store.set('3', { cookie: { maxAge: 5000 } }, cb(3));
-          store.set('4', { cookie: { maxAge: 5000 } }, cb(4));
+          store.set('reaping_1', { cookie: { maxAge:  250 } }, cb(1));
+          store.set('reaping_2', { cookie: { maxAge:  250 } }, cb(2));
+          store.set('reaping_3', { cookie: { maxAge: 5000 } }, cb(3));
+          store.set('reaping_4', { cookie: { maxAge: 5000 } }, cb(4));
           setTimeout(function() {
             store.length(function(err, len) {
               assert.ok(!err, reason(err));
@@ -145,6 +147,7 @@ describe('db', function () {
   });
   // Test session put throttling
   it('throttling', function (done) {
+    var cookieName = 'throttling';
     var opts = global_opts;
     opts.name = 'connect-couch-throttle';
     opts.setThrottle = 1000;
@@ -153,30 +156,30 @@ describe('db', function () {
     store.setup(opts, function (err, res) {
       assert.ok(!err, reason(err));
       // Set new session
-      store.set('123', { cookie: {
+      store.set(cookieName, { cookie: {
           maxAge: 20000, originalMaxAge: 20000 },
         name: 'foo',
         lastAccess: 13253760000000
       }, function(err, ok){
         assert.ok(!err, reason(err));
           // Set again, now added to locks object in connect-couchdb.js
-          store.set('123', { cookie: {
+          store.set(cookieName, { cookie: {
               maxAge: 20000,  originalMaxAge: 19999 },
             name: 'foo',
             lastAccess: 13253760000001
           }, function(err, ok){
             assert.ok(!err, reason(err));
             var start = new Date().getTime();
-            store.get('123', function(err, data){
+            store.get(cookieName, function(err, data){
               var orig = data;
               // If we set again now, and less than 1s passes, session should not change
-              store.set('123', { cookie: {
+              store.set(cookieName, { cookie: {
                   maxAge: 20000, originalMaxAge: 19998 },
                 name: 'foo',
                 lastAccess: 13253760000002
               }, function(err, ok){
                 assert.ok(!err, reason(err));
-              store.get('123', function(err, data){
+              store.get(cookieName, function(err, data){
                 var stop = new Date().getTime();
                 if (stop - start < 1000) {
                   assert.equal(JSON.stringify(orig), JSON.stringify(data),
@@ -191,13 +194,13 @@ describe('db', function () {
                 var orig = data;
                 var start = new Date().getTime();
                 setTimeout(function() {
-                  store.set('123', { cookie: {
+                  store.set(cookieName, { cookie: {
                       maxAge: 20000, originalMaxAge: 19997 },
                     name: 'foo',
                     lastAccess: 13253760001003
                   }, function(err, ok){
                     assert.ok(!err, reason(err));
-                    store.get('123', function(err, data){
+                    store.get(cookieName, function(err, data){
                       var stop = new Date().getTime();
                       // session data not changed. If two sets occurred < 1s, objects should be identical
                       if (stop - start < 1000) {
@@ -210,12 +213,12 @@ describe('db', function () {
                         );
                       }
                       // Now make change to data, session should change no matter what.
-                      store.set('123', { cookie: {
+                      store.set(cookieName, { cookie: {
                           maxAge: 20000, _expires: 13253760000003, originalMaxAge: 19997 },
                         name: 'bar',
                         lastAccess: 13253760001003
                       }, function(err, ok){
-                        store.get('123', function(err, data){
+                        store.get(cookieName, function(err, data){
                           assert.equal(false, JSON.stringify(orig) === JSON.stringify(data),
                             'Sub-microsecond session update without data change should be equal'
                           );
@@ -234,15 +237,16 @@ describe('db', function () {
     });
   });
   it("id leading with underscore", function (done) {
+    var cookieName = '_underscore';
     var opts = global_opts;
     opts.name = 'connect-couch-underscoretest';
     var store = new ConnectCouchDB(opts);
     var cookie = { cookie: { maxAge: 2000 }, name: 'nd' };
     store.setup(opts, function(err, res) {
       assert.ok(!err, reason(err));
-      store.set('_12345', cookie, function(err, ok) {
+      store.set(cookieName, cookie, function(err, ok) {
         assert.ok(!err, reason(err));
-        store.get('_12345', function(err, ok) {
+        store.get(cookieName, function(err, ok) {
           assert.ok(!err, reason(err));
           store.clearInterval();
           done();
@@ -250,4 +254,32 @@ describe('db', function () {
       });
     });
   });
+    it('queue', function (done) {
+        var cookieName = 'queue_1';
+        var opts = global_opts;
+        opts.name = 'connect-couch-queue';
+        var store = new ConnectCouchDB(opts);
+        store.setup(opts, function(err, res) {
+            assert.ok(!err, reason(err));
+            var count = 0;
+            var cb = function (i) {
+                return function (err) {
+                    assert.ok(!err, 'error with #' + i + ' : ' + reason(err));
+                    count++;
+                    if(count === 4) {
+                        store.get(cookieName, function(err, data){
+                            assert.ok(!err, reason(err));
+                            assert.equal(data.param, 4, 'Last saved item should be #4');
+                            store.clearInterval();
+                            done();
+                        });
+                    }
+                };
+            };
+            store.set(cookieName, { cookie: { maxAge: 2500 }, param: 1 }, cb(1));
+            store.set(cookieName, { cookie: { maxAge: 2500 }, param: 2 }, cb(2));
+            store.set(cookieName, { cookie: { maxAge: 2500 }, param: 3 }, cb(3));
+            store.set(cookieName, { cookie: { maxAge: 2500 }, param: 4 }, cb(4));
+        });
+    });
 });

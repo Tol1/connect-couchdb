@@ -6,7 +6,8 @@ var databases = ['connect-couch-underscoretest',
                  'connect-couch-throttle',
                  'connect-couch-reap',
                  'connect-couch-test',
-                 'connect-couch-puttest'];
+                 'connect-couch-puttest',
+                 'connect-couch-queue'];
 databases.forEach(function (database_name) {
   (new(Couch.Connection)(credentials.host || '127.0.0.1', credentials.port || '5984', {
       auth: {
