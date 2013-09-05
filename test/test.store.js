@@ -82,6 +82,7 @@ describe('db', function () {
                     // #get()
                     store.get('123', function (err, data) {
                         assert.ok(!err, '#get() got an error : ' + reason(err));
+                        delete data.__connect_couchdb_cache;
                         assert.deepEqual(c, data);
                         // #length()
                         store.length(function (err, len) {
@@ -172,15 +173,20 @@ describe('db', function () {
                     assert.ok(!err, reason(err));
                     var start = new Date().getTime();
                     store.get(cookieName, function (err, data) {
-                        var orig = data;
+                        var cacheId = data.__connect_couchdb_cache;
+                        delete data.__connect_couchdb_cache;
+                        var orig = JSON.parse(JSON.stringify(data));
                         // If we set again now, and less than 1s passes, session should not change
                         store.set(cookieName, { cookie: {
                             maxAge: 20000, originalMaxAge: 19998 },
                             name: 'foo',
-                            lastAccess: 13253760000002
+                            lastAccess: 13253760000002,
+                            __connect_couchdb_cache: cacheId
                         }, function (err, ok) {
                             assert.ok(!err, reason(err));
                             store.get(cookieName, function (err, data) {
+                                cacheId = data.__connect_couchdb_cache;
+                                delete data.__connect_couchdb_cache;
                                 var stop = new Date().getTime();
                                 if (stop - start < 1000) {
                                     assert.equal(JSON.stringify(orig), JSON.stringify(data),
@@ -198,7 +204,8 @@ describe('db', function () {
                                     store.set(cookieName, { cookie: {
                                         maxAge: 20000, originalMaxAge: 19997 },
                                         name: 'foo',
-                                        lastAccess: 13253760001003
+                                        lastAccess: 13253760001003,
+                                        __connect_couchdb_cache: cacheId
                                     }, function (err, ok) {
                                         assert.ok(!err, reason(err));
                                         store.get(cookieName, function (err, data) {
@@ -281,6 +288,36 @@ describe('db', function () {
             store.set(cookieName, { cookie: { maxAge: 2500 }, param: 2 }, cb(2));
             store.set(cookieName, { cookie: { maxAge: 2500 }, param: 3 }, cb(3));
             store.set(cookieName, { cookie: { maxAge: 2500 }, param: 4 }, cb(4));
+        });
+    });
+    it('diff', function (done) {
+        var cookieName = 'diff';
+        var opts = global_opts;
+        opts.name = 'connect-couch-diff';
+        var store = new ConnectCouchDB(opts);
+        store.setup(opts, function (err, res) {
+            assert.ok(!err, reason(err));
+            store.set(cookieName, { cookie: { maxAge: 2500 }, param: 1, another_param: 2 }, function(err, res) {
+                assert.ok(!err, reason(err));
+                store.get(cookieName, function(err, data) {
+                    assert.ok(!err, reason(err));
+                    assert.ok(data.hasOwnProperty('__connect_couchdb_cache'));
+                    data.param = 2;
+                    delete data.another_param;
+                    var orig = JSON.parse(JSON.stringify(data));
+                    delete orig.__connect_couchdb_cache;
+                    store.set(cookieName, data, function(err) {
+                        assert.ok(!err, reason(err));
+                        store.get(cookieName, function(err, data) {
+                            assert.ok(!err, reason(err));
+                            var dataClone = JSON.parse(JSON.stringify(data));
+                            delete dataClone.__connect_couchdb_cache;
+                            assert.equal(JSON.stringify(dataClone), JSON.stringify(orig));
+                            done();
+                        });
+                    });
+                });
+            });
         });
     });
 });

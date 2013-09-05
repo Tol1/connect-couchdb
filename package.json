@@ -27,7 +27,10 @@
     "async": "~0.2.9",
     "deep-diff": "~0.1.3",
     "underscore": "~1.5.1",
-    "debug": "~0.7.2"
+    "debug": "~0.7.2",
+    "memory-cache": "0.0.5",
+    "node-uuid": "~1.4.1",
+    "flat": "~1.0.0"
   },
   "devDependencies": {
     "mocha": "*"
