@@ -1,2 +1,3 @@
 .idea/*
 *.iml
+test/credentials.json
