@@ -1,6 +1,26 @@
 'use strict';
 var Couch = require('cradle'),
-    credentials = require('../test/credentials.json');
+    fs = require('fs');
+
+var host,
+    port,
+    opts = {};
+if (fs.existsSync('./test/credentials.json')) {
+    var credentials = require('../test/credentials.json');
+    host = credentials.host || '127.0.0.1';
+    port = credentials.port || '5984';
+    opts = {
+        auth: {
+            username: credentials.username || '',
+            password: credentials.password || ''
+        }
+    };
+}
+
+else {
+    host = '127.0.0.1';
+    port = '5984';
+}
 
 var databases = ['connect-couch-underscoretest',
                  'connect-couch-throttle',
@@ -10,10 +30,5 @@ var databases = ['connect-couch-underscoretest',
                  'connect-couch-queue',
                  'connect-couch-diff'];
 databases.forEach(function (database_name) {
-  (new(Couch.Connection)(credentials.host || '127.0.0.1', credentials.port || '5984', {
-      auth: {
-          username: credentials.username,
-          password: credentials.password
-      }
-  }).database(database_name)).destroy(function(err, result) {});
+  (new(Couch.Connection)(host, port, opts).database(database_name)).destroy(function(err, result) { });
 });
