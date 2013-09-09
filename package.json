@@ -1,16 +1,17 @@
 {
-  "name": "connect-couchdb",
-  "description": "CouchDB session store for Connect",
+  "name": "connect-couchdb-queue",
+  "description": "CouchDB session store for Connect, using queue and changesets to avoid race conditions",
   "keywords": [
     "connect",
     "session",
     "couchdb",
     "middleware"
   ],
-  "version": "0.4.1",
+  "version": "0.1.0",
   "node": ">=0.8",
-  "author": "Thomas Debarochez <thomas.barochez+npm@gmail.com>",
+  "author": "Tomi Nokkala <tol1@iki.fi>",
   "contributors": [
+    "Thomas Debarochez <thomas.barochez+npm@gmail.com>",
     "Ian Ward (https://github.com/ianshward)",
     "Young Hahn (https://github.com/yhahn)",
     "Ryan Kirkman (https://github.com/ryankirkman)",
@@ -43,6 +44,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/tdebarochez/connect-couchdb.git"
+    "url": "http://github.com/Tol1/connect-couchdb-queue.git"
   }
 }

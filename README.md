@@ -1,24 +1,30 @@
-# Connect CouchDB
+# Connect CouchDB Queue
 
-`connect-couchdb` is a middleware session store for the connect framework.
-[![Build Status](https://secure.travis-ci.org/tdebarochez/connect-couchdb.png)](http://travis-ci.org/tdebarochez/connect-couchdb)
+`connect-couchdb-queue` is a middleware session store for the connect framework.
+[![Build Status](https://secure.travis-ci.org/Tol1/connect-couchdb-queue.png)](http://travis-ci.org/Tol1/connect-couchdb-queue)
 
 ## Requirements
 
 - couchdb 1.2.x
 - cradle 0.6.x : the couchdb wrapper. Should be easy to use another one.
+- async 0.2.x : queuing couchdb writes, to avoid conflicts
+- underscore 1.5.1
+- deep-diff 0.1.3 : used to create changesets of session variables
+- memory-cache 0.0.5
+- node-uuid 1.4.1
+- flat 1.0.0
 - mocha (only for tests)
 
 ## Installation
 
 Via npm:
 
-    $ npm install connect-couchdb
+    $ npm install connect-couchdb-queue
 
 ## Usage
 
     var connect = require('connect'),
-        ConnectCouchDB = require('connect-couchdb')(connect);
+        ConnectCouchDB = require('connect-couchdb-queue')(connect);
 
     var store = new ConnectCouchDB({
       // Name of the database you would like to use for sessions.
@@ -67,12 +73,13 @@ Please invoke the tool to create the design documents when updating to insure yo
 
 ## Author
 
-- Thomas Debarochez ([tdebarochez](https://github.com/tdebarochez))
+- Tomi Nokkala ([Tol1](https://github.com/Tol1))
 
 ## Contributors
 
     $ git shortlog -s -n
 
+- Thomas Debarochez ([tdebarochez](https://github.com/tdebarochez))
 - Ian Ward ([ianshward](https://github.com/ianshward))
 - Young Hahn ([yhahn](https://github.com/yhahn))
 - Ryan Kirkman ([ryankirkman](https://github.com/ryankirkman))
