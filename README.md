@@ -1,6 +1,8 @@
 # Connect CouchDB Queue
 
 `connect-couchdb-queue` is a middleware session store for the connect framework.
+Motivation for this fork was to avoid race conditions caused by saving all session variables every time one is changed.
+Root cause for this is the very simple way Connect handles session variables as one object.
 [![Build Status](https://secure.travis-ci.org/Tol1/connect-couchdb-queue.png)](http://travis-ci.org/Tol1/connect-couchdb-queue)
 
 ## Requirements
