@@ -37,7 +37,7 @@
     "mocha": "*"
   },
   "scripts": {
-    "test": "node tools/cleanup.tests.js && mocha"
+    "test": "node tools/cleanup.tests.js && mocha -t 10000"
   },
   "engines": {
     "node": ">= 0.8.0"
